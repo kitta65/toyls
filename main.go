@@ -20,13 +20,18 @@ func main() {
 
 	// handle messages
 	r := bufio.NewReader(os.Stdin)
+	var b []byte
 	for {
 		h := parseHeader(r)
-		b := make([]byte, h.ContentLength)
+		if cap(b) < h.ContentLength {
+			b = make([]byte, h.ContentLength)
+		} else {
+			b = b[:h.ContentLength]
+		}
 		_, err := io.ReadFull(r, b)
 		log.Println(string(b))
 		if err == io.EOF {
-			break
+			break // connection closed
 		} else if err != nil {
 			log.Fatal(err)
 		}
