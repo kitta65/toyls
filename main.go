@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"io"
 	"log" // NOTE try slog when v1.21 is released
 	"os"
@@ -29,7 +30,13 @@ func main() {
 			b = b[:h.ContentLength]
 		}
 		_, err := io.ReadFull(r, b)
-		log.Println(string(b))
+		json_ := string(b)
+		log.Println(json_)
+		var req map[string]interface{}
+		if err := json.Unmarshal([]byte(json_), &req); err != nil {
+			log.Fatal(err)
+		}
+		log.Println(req)
 		if err == io.EOF {
 			break // connection closed
 		} else if err != nil {
