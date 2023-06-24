@@ -6,8 +6,6 @@ import (
 	"io"
 	"log" // NOTE try slog when v1.21 is released
 	"os"
-	"strconv"
-	"strings"
 )
 
 func main() {
@@ -19,7 +17,7 @@ func main() {
 	defer f.Close() // this may return error so it is a little optimistic
 	log.SetOutput(f)
 
-	// handle messages
+	// handle request
 	r := bufio.NewReader(os.Stdin)
 	var b []byte
 	for {
@@ -29,49 +27,29 @@ func main() {
 		} else {
 			b = b[:h.ContentLength]
 		}
+
 		_, err := io.ReadFull(r, b)
-		json_ := string(b)
-		log.Println(json_)
-		var req map[string]interface{}
-		if err := json.Unmarshal([]byte(json_), &req); err != nil {
+		var req request
+		if err := json.Unmarshal(b, &req); err != nil {
 			log.Fatal(err)
 		}
-		log.Println(req)
+
+		switch method := req.Method; method {
+		case "initialize":
+			log.Println(string(b))
+			var req initializeRequest
+			if err := json.Unmarshal(b, &req); err != nil {
+				log.Fatal(err)
+			}
+			handleInitialize(req)
+		default:
+			// method not impremented
+			log.Println(string(b))
+		}
 		if err == io.EOF {
 			break // connection closed
 		} else if err != nil {
 			log.Fatal(err)
 		}
 	}
-}
-
-func parseHeader(reader io.Reader) header {
-	r := bufio.NewReader(reader)
-	var h header
-	for {
-		s, err := r.ReadString('\n')
-		log.Println(s)
-		if s == "\r\n" { // empty line
-			return h
-		}
-		kv := strings.SplitN(s, ":", 2)
-		k := kv[0]
-		v := strings.TrimSpace(kv[1])
-		switch k {
-		case "Content-Length":
-			i, err := strconv.Atoi(v)
-			if err != nil {
-				log.Fatal(err)
-			}
-			h.ContentLength = i
-		case "Content-Type":
-			h.ContentType = v
-		}
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			log.Fatal(err)
-		}
-	}
-	return h
 }
