@@ -17,7 +17,7 @@ func main() {
 	defer f.Close() // this may return error so it is a little optimistic
 	log.SetOutput(f)
 
-	// handle request or message
+	// handle message
 	r := bufio.NewReader(os.Stdin)
 	var b []byte
 	for {

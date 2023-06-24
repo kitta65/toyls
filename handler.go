@@ -10,7 +10,7 @@ const (
 )
 
 func handleInitialize(req initializeRequest) {
-	resp := initializeResponse{response: response{Id: req.Id, Jsonrpc: jsonrpcVer}}
+	resp := initializeResponse{response: response{Id: req.Id}}
 	b, err := json.Marshal(&resp)
 	if err != nil {
 		log.Fatal(err)
@@ -19,7 +19,7 @@ func handleInitialize(req initializeRequest) {
 }
 
 func handleShutdown(req request) {
-	resp := response{Id: req.Id, Result: nil, Jsonrpc: jsonrpcVer}
+	resp := response{Id: req.Id, Result: nil}
 	b, err := json.Marshal(&resp)
 	if err != nil {
 		log.Fatal(err)

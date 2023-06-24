@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 )
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#headerPart
@@ -20,18 +21,32 @@ func (h header) toString() string {
 	return length + type_
 }
 
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#abstractMessage
+type message struct {
+	Jsonrpc string `json:"jsonrpc"`
+}
+
+type jsonrpc string
+
+func (j jsonrpc) MarshalJSON() ([]byte, error) {
+	if j != "" && j != "2.0" {
+		log.Fatal("unexpected version")
+	}
+	return []byte(j), nil
+}
+
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage
 type request struct {
-	Id      interface{} `json:"id"` // integer | string
-	Method  string      `json:"method"`
-	Jsonrpc string      `json:"jsonrpc"`
+	message
+	Id     interface{} `json:"id"` // integer | string
+	Method string      `json:"method"`
 }
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#responseMessage
 type response struct {
-	Id      interface{} `json:"id"` // integer | string
-	Result  interface{} `json:"result"`
-	Jsonrpc string      `json:"jsonrpc"`
+	message
+	Id     interface{} `json:"id"` // integer | string
+	Result interface{} `json:"result"`
 }
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#initialize
