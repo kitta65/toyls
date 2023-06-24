@@ -22,14 +22,16 @@ func (h header) toString() string {
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage
 type request struct {
-	Id     interface{} `json:"id"` // integer | string
-	Method string      `json:"method"`
+	Id      interface{} `json:"id"` // integer | string
+	Method  string      `json:"method"`
+	Jsonrpc string      `json:"jsonrpc"`
 }
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#responseMessage
 type response struct {
-	Id     interface{} `json:"id"` // integer | string
-	Result interface{} `json:"result"`
+	Id      interface{} `json:"id"` // integer | string
+	Result  interface{} `json:"result"`
+	Jsonrpc string      `json:"jsonrpc"`
 }
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#initialize

@@ -14,9 +14,8 @@ func respond(b []byte) {
 		ContentLength: len(b),
 	}.toString()
 	j := string(b)
-	r := fmt.Sprintf("%v\r\n%v", h, j)
 	log.Println("SERVER:", j)
-	fmt.Print(r)
+	fmt.Printf("%v\r\n%v", h, j)
 }
 
 func parseHeader(reader io.Reader) header {
