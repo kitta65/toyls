@@ -17,7 +17,7 @@ func main() {
 	defer f.Close() // this may return error so it is a little optimistic
 	log.SetOutput(f)
 
-	// handle request
+	// handle request or message
 	r := bufio.NewReader(os.Stdin)
 	var b []byte
 	for {
@@ -33,23 +33,26 @@ func main() {
 		if err := json.Unmarshal(b, &req); err != nil {
 			log.Fatal(err)
 		}
+		log.Println("CLIENT:", string(b))
 
-		switch method := req.Method; method {
+		method := req.Method
+		switch method {
 		case "initialize":
-			log.Println(string(b))
 			var req initializeRequest
 			if err := json.Unmarshal(b, &req); err != nil {
 				log.Fatal(err)
 			}
 			handleInitialize(req)
-		default:
-			// method not impremented
-			log.Println(string(b))
+		case "shutdown":
+			handleShutdown(req)
 		}
 		if err == io.EOF {
 			break // connection closed
 		} else if err != nil {
 			log.Fatal(err)
+		}
+		if method == "exit" {
+			break
 		}
 	}
 }

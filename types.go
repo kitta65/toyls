@@ -28,7 +28,8 @@ type request struct {
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#responseMessage
 type response struct {
-	Id interface{} `json:"id"` // integer | string
+	Id     interface{} `json:"id"` // integer | string
+	Result interface{} `json:"result"`
 }
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#initialize
