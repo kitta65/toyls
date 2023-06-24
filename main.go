@@ -8,6 +8,8 @@ import (
 	"os"
 )
 
+var texts = map[string]string{}
+
 func main() {
 	// configure log
 	f, err := os.Create("/tmp/toyls.log")
@@ -30,14 +32,14 @@ func main() {
 
 		// read json
 		_, err := io.ReadFull(r, b)
-		var req request
-		if err := json.Unmarshal(b, &req); err != nil {
+		var reqOrNotif request
+		if err := json.Unmarshal(b, &reqOrNotif); err != nil {
 			log.Fatal(err)
 		}
 		log.Println("CLIENT:", string(b))
 
-		// respond to message
-		method := req.Method
+		// check method
+		method := reqOrNotif.Method
 		switch method {
 		case "initialize":
 			var req initializeRequest
@@ -46,7 +48,7 @@ func main() {
 			}
 			handleInitialize(req)
 		case "shutdown":
-			handleShutdown(req)
+			handleShutdown(reqOrNotif)
 			// TODO return error for all requests except for exit
 		case "textDocument/completion":
 			var req completionRequest
@@ -54,6 +56,12 @@ func main() {
 				log.Fatal(err)
 			}
 			handleCompletion(req)
+		case "textDocument/didChange":
+			var notif didChangeNotification
+			if err := json.Unmarshal(b, &notif); err != nil {
+				log.Fatal(err)
+			}
+			handleDidChange(notif)
 		}
 
 		// check status
