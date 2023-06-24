@@ -29,10 +29,11 @@ type message struct {
 type jsonrpc string
 
 func (j jsonrpc) MarshalJSON() ([]byte, error) {
-	if j != "" && j != "2.0" {
+	var ver2 jsonrpc = "2.0"
+	if j != "" && j != ver2 {
 		log.Fatal("unexpected version")
 	}
-	return []byte(j), nil
+	return []byte(ver2), nil
 }
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage
