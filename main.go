@@ -48,6 +48,12 @@ func main() {
 		case "shutdown":
 			handleShutdown(req)
 			// TODO return error for all requests except for exit
+		case "textDocument/completion":
+			var req completionRequest
+			if err := json.Unmarshal(b, &req); err != nil {
+				log.Fatal(err)
+			}
+			handleCompletion(req)
 		}
 
 		// check status

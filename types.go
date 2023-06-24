@@ -64,3 +64,24 @@ type initializeResponse struct {
 		} `json:"capabilities"`
 	} `json:"result"`
 }
+
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_completion
+type completionRequest struct {
+	request
+	Params struct {
+		textDocument string
+		Position     struct {
+			Line      int `json:"line"`
+			Character int `json:"character"`
+		} `json:"position"`
+	} `json:"params"`
+}
+
+type completionResponse struct {
+	response
+	Result []completionItem `json:"result"`
+}
+
+type completionItem struct {
+	Label string `json:"label"`
+}

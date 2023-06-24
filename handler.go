@@ -5,9 +5,20 @@ import (
 	"log"
 )
 
-const (
-	jsonrpcVer = "2.0"
-)
+func handleCompletion(req completionRequest) {
+	resp := completionResponse{
+		response: response{Id: req.Id},
+		Result: []completionItem{
+			{Label: "TypeScript"},
+			{Label: "JavaScript"},
+		},
+	}
+	b, err := json.Marshal(&resp)
+	if err != nil {
+		log.Fatal(err)
+	}
+	respond(b)
+}
 
 func handleInitialize(req initializeRequest) {
 	resp := initializeResponse{response: response{Id: req.Id}}
