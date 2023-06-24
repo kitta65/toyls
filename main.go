@@ -28,6 +28,7 @@ func main() {
 			b = b[:h.ContentLength]
 		}
 
+		// read json
 		_, err := io.ReadFull(r, b)
 		var req request
 		if err := json.Unmarshal(b, &req); err != nil {
@@ -35,6 +36,7 @@ func main() {
 		}
 		log.Println("CLIENT:", string(b))
 
+		// respond to message
 		method := req.Method
 		switch method {
 		case "initialize":
@@ -45,9 +47,12 @@ func main() {
 			handleInitialize(req)
 		case "shutdown":
 			handleShutdown(req)
+			// TODO return error for all requests except for exit
 		}
+
+		// check status
 		if err == io.EOF {
-			break // connection closed
+			break // connection may be closed
 		} else if err != nil {
 			log.Fatal(err)
 		}
