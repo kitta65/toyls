@@ -40,3 +40,51 @@ func handleShutdown(req request) {
 	}
 	respond(b)
 }
+
+func handleDidChange(notif didChangeNotification) {
+	uri := notif.Params.TextDocument.Uri
+	texts[uri] = notif.Params.ContentChanges[0].Text
+
+	params := publishDiagnosticsParams{Uri: uri, Diagnostics: validate(texts[uri])}
+	resp := publishDiagnosticsNotification{
+		notification: notification{Method: "textDocument/publishDiagnostics"},
+		Params:       params,
+	}
+	b, err := json.Marshal(&resp)
+	if err != nil {
+		log.Fatal(err)
+	}
+	respond(b)
+}
+
+func handleDidOpen(notif didOpenNotification) {
+	uri := notif.Params.TextDocument.Uri
+	texts[uri] = notif.Params.TextDocument.Text
+
+	params := publishDiagnosticsParams{Uri: uri, Diagnostics: validate(texts[uri])}
+	resp := publishDiagnosticsNotification{
+		notification: notification{Method: "textDocument/publishDiagnostics"},
+		Params:       params,
+	}
+	b, err := json.Marshal(&resp)
+	if err != nil {
+		log.Fatal(err)
+	}
+	respond(b)
+}
+
+func handleDidClose(notif didCloseNotification) {
+	uri := notif.Params.TextDocument.Uri
+
+	// empty diagnostics
+	params := publishDiagnosticsParams{Uri: uri, Diagnostics: []diagnostic{}}
+	resp := publishDiagnosticsNotification{
+		notification: notification{Method: "textDocument/publishDiagnostics"},
+		Params:       params,
+	}
+	b, err := json.Marshal(&resp)
+	if err != nil {
+		log.Fatal(err)
+	}
+	respond(b)
+}

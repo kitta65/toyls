@@ -107,3 +107,63 @@ type position struct {
 	Line      int `json:"line"`
 	Character int `json:"character"`
 }
+
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_didClose
+type didCloseNotification struct {
+	notification
+	Params struct {
+		TextDocument struct {
+			Uri string `json:"uri"`
+		} `json:"textDocument"`
+	} `json:"params"`
+}
+
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_didChange
+type didChangeNotification struct {
+	notification
+	Params struct {
+		TextDocument struct {
+			Version int    `json:"version"`
+			Uri     string `json:"uri"`
+		} `json:"textDocument"`
+		ContentChanges []struct {
+			Text string `json:"text"`
+		} `json:"contentChanges"`
+	} `json:"params"`
+}
+
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_didOpen
+type didOpenNotification struct {
+	notification
+	Params struct {
+		TextDocument struct {
+			Uri        string `json:"uri"`
+			LanguageId string `json:"languageId"`
+			Version    int    `json:"version"`
+			Text       string `json:"text"`
+		} `json:"textDocument"`
+	} `json:"params"`
+}
+
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_publishDiagnostics
+type publishDiagnosticsNotification struct {
+	notification
+	Params publishDiagnosticsParams `json:"params"`
+}
+
+type publishDiagnosticsParams struct {
+	Uri         string       `json:"uri"`
+	Diagnostics []diagnostic `json:"diagnostics"`
+}
+
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#diagnostic
+type diagnostic struct {
+	Range   range_ `json:"range"`
+	Message string `json:"message"`
+}
+
+type range_ struct {
+	// positionは補完の章で定義したよ
+	Start position `json:"start"`
+	End   position `json:"end"`
+}
