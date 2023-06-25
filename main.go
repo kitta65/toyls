@@ -56,12 +56,25 @@ func main() {
 				log.Fatal(err)
 			}
 			handleCompletion(req)
+		case "textDocument/didClose":
+			var notif didCloseNotification
+			if err := json.Unmarshal(b, &notif); err != nil {
+				log.Fatal(err)
+			}
+			handleDidClose(notif)
+
 		case "textDocument/didChange":
 			var notif didChangeNotification
 			if err := json.Unmarshal(b, &notif); err != nil {
 				log.Fatal(err)
 			}
 			handleDidChange(notif)
+		case "textDocument/didOpen":
+			var notif didOpenNotification
+			if err := json.Unmarshal(b, &notif); err != nil {
+				log.Fatal(err)
+			}
+			handleDidOpen(notif)
 		}
 
 		// check status

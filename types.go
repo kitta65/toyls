@@ -102,6 +102,16 @@ type completionItem struct {
 	Label string `json:"label"`
 }
 
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_didClose
+type didCloseNotification struct {
+	notification
+	Params struct {
+		TextDocument struct {
+			Uri string `json:"uri"`
+		} `json:"textDocument"`
+	} `json:"params"`
+}
+
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_didChange
 type didChangeNotification struct {
 	notification
@@ -113,6 +123,19 @@ type didChangeNotification struct {
 		ContentChanges []struct {
 			Text string `json:"text"`
 		} `json:"contentChanges"`
+	} `json:"params"`
+}
+
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_didOpen
+type didOpenNotification struct {
+	notification
+	Params struct {
+		TextDocument struct {
+			Uri        string `json:"uri"`
+			LanguageId string `json:"languageId"`
+			Version    int    `json:"version"`
+			Text       string `json:"text"`
+		} `json:"textDocument"`
 	} `json:"params"`
 }
 
