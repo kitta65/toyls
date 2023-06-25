@@ -47,6 +47,12 @@ func main() {
 			handleInitialize(req)
 		case "shutdown":
 			handleShutdown(reqOrNotif)
+		case "textDocument/completion":
+			var req completionRequest
+			if err := json.Unmarshal(b, &req); err != nil {
+				log.Fatal(err)
+			}
+			handleCompletion(req)
 		}
 
 		// check status

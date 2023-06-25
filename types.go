@@ -81,3 +81,29 @@ type textDocumentSyncOption struct {
 	OpenClose bool `json:"openClose"`
 	Change    int  `json:"change"`
 }
+
+// https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_completion
+type completionRequest struct {
+	request
+	Params struct {
+		TextDocument struct {
+			Uri string `json:"uri"`
+		} `json:"textDocument"`
+		Position position `json:"position"`
+	} `json:"params"`
+}
+
+type completionResponse struct {
+	response
+	Result []completionItem `json:"result"`
+}
+
+type completionItem struct {
+	Label  string `json:"label"`
+	Detail string `json:"detail"`
+}
+
+type position struct {
+	Line      int `json:"line"`
+	Character int `json:"character"`
+}
