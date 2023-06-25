@@ -62,9 +62,7 @@ func handleDidChange(notif didChangeNotification) {
 	uri := notif.Params.TextDocument.Uri
 	texts[uri] = notif.Params.ContentChanges[0].Text
 
-	params := publishDiagnosticsParams{Uri: uri, Diagnostics: []diagnostic{
-		diagnostic{range_{position{0, 0}, position{0, 1}}, "start"},
-	}}
+	params := publishDiagnosticsParams{Uri: uri, Diagnostics: validate(texts[uri])}
 	resp := publishDiagnosticsNotification{
 		notification: notification{Method: "textDocument/publishDiagnostics"},
 		Params:       params,
@@ -80,9 +78,7 @@ func handleDidOpen(notif didOpenNotification) {
 	uri := notif.Params.TextDocument.Uri
 	texts[uri] = notif.Params.TextDocument.Text
 
-	params := publishDiagnosticsParams{Uri: uri, Diagnostics: []diagnostic{
-		diagnostic{range_{position{0, 0}, position{0, 1}}, "start"},
-	}}
+	params := publishDiagnosticsParams{Uri: uri, Diagnostics: validate(texts[uri])}
 	resp := publishDiagnosticsNotification{
 		notification: notification{Method: "textDocument/publishDiagnostics"},
 		Params:       params,
