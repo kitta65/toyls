@@ -99,7 +99,8 @@ type completionResponse struct {
 }
 
 type completionItem struct {
-	Label string `json:"label"`
+	Label  string `json:"label"`
+	Detail string `json:"detail"`
 }
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_didClose

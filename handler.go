@@ -9,8 +9,7 @@ func handleCompletion(req completionRequest) {
 	resp := completionResponse{
 		response: response{Id: req.Id},
 		Result: []completionItem{
-			{Label: "TypeScript"},
-			{Label: "JavaScript"},
+			{Label: "Harry", Detail: "name of a famous wizard"},
 		},
 	}
 	b, err := json.Marshal(&resp)
