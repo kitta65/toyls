@@ -45,6 +45,8 @@ func main() {
 				log.Fatal(err)
 			}
 			handleInitialize(req)
+		case "shutdown":
+			handleShutdown(reqOrNotif)
 		}
 
 		// check status
@@ -52,6 +54,9 @@ func main() {
 			break // connection may be closed
 		} else if err != nil {
 			log.Fatal(err)
+		}
+		if method == "exit" {
+			break
 		}
 	}
 }

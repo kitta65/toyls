@@ -17,3 +17,12 @@ func handleInitialize(req initializeRequest) {
 	}
 	respond(b)
 }
+
+func handleShutdown(req request) {
+	resp := response{Id: req.Id, Result: nil}
+	b, err := json.Marshal(&resp)
+	if err != nil {
+		log.Fatal(err)
+	}
+	respond(b)
+}
