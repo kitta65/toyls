@@ -23,7 +23,7 @@ func (h header) toString() string {
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#abstractMessage
 type message struct {
-	Jsonrpc string `json:"jsonrpc"`
+	Jsonrpc jsonrpc `json:"jsonrpc"`
 }
 
 type jsonrpc string
@@ -34,7 +34,7 @@ func (j jsonrpc) MarshalJSON() ([]byte, error) {
 	if j != "" && j != ver2 {
 		log.Fatal("unexpected version")
 	}
-	return []byte(ver2), nil
+	return []byte(fmt.Sprintf(`"%v"`, ver2)), nil
 }
 
 // https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage
