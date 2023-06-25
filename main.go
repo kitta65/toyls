@@ -35,5 +35,12 @@ func main() {
 			log.Fatal(err)
 		}
 		log.Println("CLIENT:", string(b))
+
+		// check status
+		if err == io.EOF {
+			break // connection may be closed
+		} else if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
