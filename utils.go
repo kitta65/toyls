@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"log"
 	"strconv"
@@ -36,4 +37,13 @@ func parseHeader(reader io.Reader) header {
 		}
 	}
 	return h
+}
+
+func respond(b []byte) {
+	h := header{
+		ContentLength: len(b),
+	}.toString()
+	j := string(b)
+	log.Println("SERVER:", j)
+	fmt.Printf("%v\r\n%v", h, j)
 }

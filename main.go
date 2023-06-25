@@ -36,6 +36,17 @@ func main() {
 		}
 		log.Println("CLIENT:", string(b))
 
+		// check method
+		method := reqOrNotif.Method
+		switch method {
+		case "initialize":
+			var req initializeRequest
+			if err := json.Unmarshal(b, &req); err != nil {
+				log.Fatal(err)
+			}
+			handleInitialize(req)
+		}
+
 		// check status
 		if err == io.EOF {
 			break // connection may be closed
