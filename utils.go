@@ -20,7 +20,7 @@ func respond(b []byte) {
 }
 
 func validate(text string) []diagnostic {
-	var diagnostics []diagnostic
+	var diagnostics = []diagnostic{}
 	ranges := search(`(?i)voldemort`, text)
 	for _, r := range ranges {
 		diagnostics = append(diagnostics, diagnostic{
