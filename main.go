@@ -4,11 +4,9 @@ import (
 	"bufio"
 	"encoding/json"
 	"io"
-	"log" // NOTE try slog when v1.21 is released
+	"log"
 	"os"
 )
-
-var texts = map[string]string{}
 
 func main() {
 	// configure log
@@ -37,54 +35,5 @@ func main() {
 			log.Fatal(err)
 		}
 		log.Println("CLIENT:", string(b))
-
-		// check method
-		method := reqOrNotif.Method
-		switch method {
-		case "initialize":
-			var req initializeRequest
-			if err := json.Unmarshal(b, &req); err != nil {
-				log.Fatal(err)
-			}
-			handleInitialize(req)
-		case "shutdown":
-			handleShutdown(reqOrNotif)
-			// TODO return error for all requests except for exit
-		case "textDocument/completion":
-			var req completionRequest
-			if err := json.Unmarshal(b, &req); err != nil {
-				log.Fatal(err)
-			}
-			handleCompletion(req)
-		case "textDocument/didClose":
-			var notif didCloseNotification
-			if err := json.Unmarshal(b, &notif); err != nil {
-				log.Fatal(err)
-			}
-			handleDidClose(notif)
-
-		case "textDocument/didChange":
-			var notif didChangeNotification
-			if err := json.Unmarshal(b, &notif); err != nil {
-				log.Fatal(err)
-			}
-			handleDidChange(notif)
-		case "textDocument/didOpen":
-			var notif didOpenNotification
-			if err := json.Unmarshal(b, &notif); err != nil {
-				log.Fatal(err)
-			}
-			handleDidOpen(notif)
-		}
-
-		// check status
-		if err == io.EOF {
-			break // connection may be closed
-		} else if err != nil {
-			log.Fatal(err)
-		}
-		if method == "exit" {
-			break
-		}
 	}
 }
